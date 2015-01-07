@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+  <!--script src="http://leapmotion.github.io/leapjs-playback/recorder/javascripts/lib/three.min.js"></script>
+  <script src="http://leapmotion.github.io/leapjs-playback/recorder/javascripts/lib/TrackballControls.js"></script>
+
+<script src="http://js.leapmotion.com/leap-plugins-0.1.8.js"></script>
+
+<script src="http://js.leapmotion.com/leap-plugins-0.1.8.js"></script-->
+  <script src="http://js.leapmotion.com/leap-0.6.3.min.js"></script>
+  <script src="js/three.min.js"></script>
+<style>
+html, body { margin: 0;  width: 100%; height: 100% }
+#dot {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <br />
+    <br />
+<div id="example" style="position:absolute">Denormalized div</div>
+<div id="proof" style="position:absolute; top:100; left:100;">Normalized div</div>
+<script>
+var controller = Leap.loop({enableGestures: true}, function(frame){
+  if(frame.valid){
+    var exampleElement = document.getElementById("example");
+    var proofElement = document.getElementById("proof");
+
+    // Area mapped to Leap Motion coordinates, in this case, the whole page:
+    var area = {width: window.innerWidth, height: window.innerHeight};
+
+    // Calculate normalized position on the page
+    var pagePoint = Leap.vec3.create();
+    pagePoint[0] = 0.4;//(exampleElement.offsetLeft)/area.width; //x
+    pagePoint[1] = 0.1;//(area.height - exampleElement.offsetTop)/area.height; //y (inverted)
+    pagePoint[2] = 0; //The page is 2D, so pick an arbitrary value for z.
+    //console.log(pagePoint);
+    if (frame.gestures.length) {
+        frame.gestures.forEach(function(gesture){
+            switch (gesture.type){
+              case "circle":
+                  //console.log("Circle Gesture");
+                  break;
+              case "keyTap":
+                  //console.log("Key Tap Gesture");
+                  break;
+              case "screenTap":
+                  //console.log("Screen Tap Gesture");
+                  break;
+              case "swipe":
+                  console.log("Swipe Gesture");
+                  break;
+            }
+        });
+    }
+    var leapCoordinates = frame.interactionBox.denormalizePoint(pagePoint);
+
+    // Now test that the coordinates are correct by reversing the process
+    // and moving the "proof" element to the same position as the example element.
+    
+  }
+});
+</script>
+</body>
+</html>
